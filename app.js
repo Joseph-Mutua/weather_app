@@ -57,3 +57,41 @@ const listNotes = () => {
         log(chalk.blue(note.body));
     });
 }
+
+
+const readNote = (title) => {
+    const notes = loadNotes();
+    const noteToRead = notes.find((note) => note.title === title);
+
+    if (noteToRead) {
+        log(chalk.bold.yellow.underline(noteToRead.title));
+        log(noteToRead.body);
+    }
+    else {
+        log(chalk.bgRed("Note not Found!"));
+    }
+
+};
+
+const saveNotes = (notes) => {
+    const dataJSON = JSON.stringify(notes);
+    fs.writeFileSync('notes.json', dataJSON);
+};
+
+const loadNotes = () => {
+    try {
+        const dataBuffer = fs.readFileSync('notes.json');
+        const dataJSON = dataBuffer.toString();
+        return JSON.parse(dataJSON);
+    }
+    catch (e) {
+        return [];
+    }
+};
+
+module.exports = {
+    addNote: addNote,
+    removeNote: removeNote,
+    listNotes: listNotes,
+    readNote: readNote
+};
