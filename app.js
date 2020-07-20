@@ -1,16 +1,26 @@
 const request = require('request');
-const log = console.log;
-
 const geocode = require('./utils/geocode');
 const forecast = require('./utils/forecast');
+const log = console.log;
 
+const locationName = process.argv[2];
 
-geocode('Kitui', (error, data) => {
-    log('Error', error);
-    log('Data', data);
-});
+geocode(locationName, (error, { latitude, longitude, location }) => {
+    if (!locationName) {
+        return log("Please input the location!");
+    }
 
-forecast(-75.7088, 44.1545, (error, data) => {
-    console.log('Error', error);
-    console.log('Data', data);
+    if (error) {
+        return log(error);
+    }
+
+    forecast(latitude, longitude, (error, forecastData) => {
+        if (error) {
+            return log('Error', error);
+        }
+
+        log(location);
+        log(forecastData);
+    });
+
 });
